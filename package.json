@@ -1,0 +1,41 @@
+{
+  "name": "madlib-xhr",
+  "description": "Platform agnostic XMLHttpRequest implementation",
+  "main": "lib/node.js",
+  "browser": "lib/browser.js",
+  "version": "0.1.0",
+  "author": {
+    "name": "Mark Doeswijk",
+    "email": "mark.doeswijk@marviq.com",
+    "url": "https://github.com/Marviq"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://stash.marviq.com/scm/mad/xhr.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "command -v grunt >/dev/null 2>&1 && grunt || { echo >&2 'Grunt is not installed'; }"
+  },
+  "devDependencies": {
+    "grunt-contrib-watch": "~0.3.1",
+    "grunt-contrib-coffee": "~0.6.0",
+    "grunt": "~0.4.1",
+    "coffee-script": "~1.6.3",
+    "chai": "~1.8.1",
+    "grunt-mocha-test": "~0.8.2",
+    "madlib-settings": "~0.1.5"
+  },
+  "dependencies": {
+    "xmlhttprequest": "~1.6.0",
+    "madlib-console": "~0.1.0",
+    "madlib-promise-poll": "~0.1.0",
+    "madlib-object-utils": "~0.1.0",
+    "q": "~0.9.7"
+  },
+  "licenses": [
+    {
+      "type": "BSD"
+    }
+  ]
+}
