@@ -65,7 +65,7 @@
         @poll
 
         constructor: ( @settings ) ->
-            @timeout = @settings.get( "xhr.timeout", 30000 )
+            @timeout = parseInt( @settings.get( "xhr.timeout", 30000 ), 10 )
 
         createTransport: () ->
             if XMLHttpRequest?
@@ -353,5 +353,5 @@
             @transport.getResponseHeaders( name ) if @transport
 
         setTimeout: ( timeout ) ->
-            @timeout = timeout
+            @timeout = parseInt( timeout, 10 )
 )
