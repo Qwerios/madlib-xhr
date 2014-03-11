@@ -258,14 +258,15 @@
             # Set content type if provided or set the default
             #
             if params.contentType?
-                headers[ "Content-Type" ] = params.contentType
-                @request.contentType      = params.contentType
+                # There is an option to not set the contentType header
+                # This is needed for the FormData content-type header which
+                # is set by the browser dynamically
+                #
+                if params.contentType isnt false
+                    headers[ "Content-Type" ] = params.contentType
+                    @request.contentType      = params.contentType
 
-            # There is an option to not set the contentType header
-            # This is needed for the new FormData content-type header which
-            # is set by the browser XHR dynamically
-            #
-            else if params.contentType isnt false
+            else
                 headers[ "Content-Type" ] = @defaultHeaders.contentType
 
             # Set all the request headers
