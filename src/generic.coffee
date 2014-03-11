@@ -260,7 +260,12 @@
             if params.contentType?
                 headers[ "Content-Type" ] = params.contentType
                 @request.contentType      = params.contentType
-            else
+
+            # There is an option to not set the contentType header
+            # This is needed for the new FormData content-type header which
+            # is set by the browser XHR dynamically
+            #
+            else if params.contentType isnt false
                 headers[ "Content-Type" ] = @defaultHeaders.contentType
 
             # Set all the request headers
