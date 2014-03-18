@@ -240,7 +240,7 @@
 
             # Set with credentials if requested
             #
-            if params.withCredentials and @transport? and @transport.withCredentials
+            if params.withCredentials and @transport? and @transport.withCredentials?
                 @transport.withCredentials = params.withCredentials
 
             # Store request details
