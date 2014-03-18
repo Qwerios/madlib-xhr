@@ -49,9 +49,6 @@
                     #
                     throw noXHRexception
 
-        withCredentials: ( enabled = true ) ->
-            @transport.withCredentials = enabled is true
-
         createSuccessResponse: () ->
             if @request.type is "script" or @request.type is "jsonp"
                 # JSONP is unique to the browser environment

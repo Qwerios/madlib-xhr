@@ -213,6 +213,7 @@
         # headers   - object containing any (custom) headers to set
         # data      - request body or url parameters for GET/PUT/DELETE
         # cache     - if set to false we add a cache buster (timestamp to the URL)
+        # withCredentials - if set to true will set the withCredentials flag on the XMLHttpRequest
         #
         call: ( params = {} ) ->
             method  = ( params.method  or "GET" ).toUpperCase()
@@ -236,6 +237,11 @@
                 url = @appendURL( url, +( new Date() ) )
 
             @open( method, params.url, async, params.username, params.password )
+
+            # Set with credentials if requested
+            #
+            if params.withCredentials and @transport? and @transport.withCredentials
+                @transport.withCredentials = params.withCredentials
 
             # Store request details
             #
