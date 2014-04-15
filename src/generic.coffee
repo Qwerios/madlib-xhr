@@ -199,6 +199,7 @@
                 # But this way the promise will be rejected as expected
                 #
                 console.error( "[XHR] Error during request", xhrError )
+                @createErrorResponse( xhrError )
 
             return @deferred.promise
 
@@ -334,12 +335,13 @@
                 statusText: @transport.statusText
             )
 
-        createErrorResponse: () ->
+        createErrorResponse: ( xhrException ) ->
             @deferred.reject(
                 request:    @request
                 response:   @transport.responseText || @transport.statusText
                 status:     @transport.status
                 statusText: @transport.statusText
+                exception:  xhrException
             )
 
         createTimeoutResponse: () ->
