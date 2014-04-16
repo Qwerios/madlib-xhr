@@ -14,8 +14,26 @@
 
 )( ( XHR ) ->
 
+    ###*
+    #   The webbrowser specific implementation for the madlib XMLHttpRequest implementation
+    #
+    #   @author     mdoeswijk
+    #   @class      XHRBrower
+    #   @extends    XHR
+    #   @constructor
+    #   @version    0.1
+    ###
     class XHRBrowser extends XHR
 
+        ###*
+        #   Creates the actual XHR instance that is used for the network request
+        #   Overridden from the base class to add browser specific deviations for creating the xhr.
+        #
+        #   @function createTransport
+        #
+        #   @return {XHR}   Returns the native XHR instance
+        #
+        ###
         createTransport: () ->
             try
                 # Modern browsers (Chrome, Safari, Opera, etc)
@@ -49,6 +67,15 @@
                     #
                     throw noXHRexception
 
+        ###*
+        #   Resolves the call promise with the correct success data based on the transport status
+        #   Overridden from the base class to add JSONP support
+        #
+        #   @function createSuccessResponse
+        #
+        #   @return {XHR}   Returns the native XHR instance
+        #
+        ###
         createSuccessResponse: () ->
             if @request.type is "script" or @request.type is "jsonp"
                 # JSONP is unique to the browser environment
@@ -62,9 +89,17 @@
             else
                 super()
 
-        # We only need JSONP in the browser. It will inject a script element
-        # into the DOM which is about as web browser specific as it gets
+        ###*
+        #   Creates the correct response type from the returned XHR response
         #
+        #   @function handleJSONPResponse
+        #
+        #   @return {Mixed}   The correctly formatted call response
+        #
+        ###
         handleJSONPResponse: () ->
+            # We only need JSONP in the browser. It will inject a script element
+            # into the DOM which is about as web browser specific as it gets
+            #
             # TODO
 )

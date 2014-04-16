@@ -6,15 +6,15 @@
   "version": "0.1.6",
   "author": {
     "name": "Mark Doeswijk",
-    "email": "mark.doeswijk@marviq.com",
-    "url": "https://github.com/Marviq"
+    "email": "mdoeswijk@gmail.com",
+    "url": "https://github.com/Qwerios"
   },
   "repository": {
     "type": "git",
-    "url": "https://stash.marviq.com/scm/mad/xhr.git"
+    "url": "https://github.com/Qwerios/madlib-xhr.git"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "command -v grunt >/dev/null 2>&1 && grunt test || { echo >&2 'Grunt is not installed'; }",
     "prepublish": "command -v grunt >/dev/null 2>&1 && grunt || { echo >&2 'Grunt is not installed'; }"
   },
   "devDependencies": {

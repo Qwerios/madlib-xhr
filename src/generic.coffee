@@ -28,6 +28,15 @@
 
 )( ( console, Q, objectUtils, Poll ) ->
 
+    ###*
+    #   The W3 XMLHttpRequest implementation for madlib. It exposes the W3 interface
+    #   and adds a jQuery like convenience method "call"
+    #
+    #   @author     mdoeswijk
+    #   @class      XHR
+    #   @constructor
+    #   @version    0.1
+    ###
     class XHR
         defaultHeaders:
             contentType:   "application/x-www-form-urlencoded"
@@ -64,9 +73,28 @@
         #
         @poll
 
+        ###*
+        #   Resolves the call promise with the correct success data based on the transports status
+        #   Overridden from the base class to add JSONP support
+        #
+        #   @function constructor
+        #
+        #   @params settings    {Object}    madlib-settings instance
+        #
+        #   @return None
+        #
+        ###
         constructor: ( @settings ) ->
             @timeout = parseInt( @settings.get( "xhr.timeout", 30000 ), 10 )
 
+        ###*
+        #   Creates the actual XHR instance that is used for the network request
+        #
+        #   @function createTransport
+        #
+        #   @return {XHR}   Returns the native XHR instance
+        #
+        ###
         createTransport: () ->
             if XMLHttpRequest?
                 return new XMLHttpRequest()
@@ -85,12 +113,43 @@
             else
                 throw new Error( "[XHR] No transport available" )
 
+        ###*
+        #   Resolves the call promise with the correct success data based on the transports status
+        #   Overridden from the base class to add JSONP support
+        #
+        #   @function getTransport
+        #
+        #   @return {XHR}   The native XHR instance
+        #
+        ###
         getTransport: () ->
             @transport
 
+        ###*
+        #   Abort the XHR request
+        #
+        #   @function abort
+        #
+        #   @return None
+        #
+        ###
         abort: () ->
             @transport.abort() if @transport
 
+        ###*
+        #   Opens the XHR request channel
+        #
+        #   @function open
+        #
+        #   @params method      {String}    The request method (GET, POST, PUT or DELETE)
+        #   @params url         {String}    The request url
+        #   @params async       {Boolean}   Indicates if the request should be asynchronous or not. Default true
+        #   @params username    {String}    The http basic authentication username
+        #   @params password    {String}    The http basic authentication password
+        #
+        #   @return None
+        #
+        ###
         open: ( method, url, async, username, password ) ->
             @transport = @createTransport()
 
@@ -171,6 +230,16 @@
 
             return
 
+        ###*
+        #   Sends the XHR request
+        #
+        #   @function open
+        #
+        #   @params data    {Mixed}     The request content (body)
+        #
+        #   @return {Promise}   Call success
+        #
+        ###
         send: ( data ) ->
             @deferred     = Q.defer()
             @request.data = data
@@ -207,15 +276,26 @@
         #
         # We support the following parameters
         #
-        # method    - GET/POST/PUT/DELETE (default: GET)
-        # url       - call path
-        # type      - xml, json, script, html, text
-        # accepts   - accept header value
-        # headers   - object containing any (custom) headers to set
-        # data      - request body or url parameters for GET/PUT/DELETE
-        # cache     - if set to false we add a cache buster (timestamp to the URL)
-        # withCredentials - if set to true will set the withCredentials flag on the XMLHttpRequest
         #
+        ###*
+        #   Convenience method to perform an XHR call. Inspired by the jQuery.ajax()
+        #   Combines the transport open() and send() into one call and helps
+        #   with setting defaults and formatting request and response data
+        #
+        #   @function call
+        #
+        #   @params {Object}        params                  The request paramters
+        #       @param {String}     params.method           The request method ie. GET, POST, PUT or DELETE. Defaults to GET
+        #       @param {String}     params.type             The request type ie. xml, json, script, html or text
+        #       @param {String}     params.accepts          The value for the accepts header
+        #       @param {Object}     params.headers          Object containing any custom request headers. Object key is the header name and the value is the header value
+        #       @param {Mixed}      params.data             The request content (body)
+        #       @param {Boolean}    params.cache            If set to false a cache buster (timestamp) will be added to the request url
+        #       @param {Boolean}    params.withCredentials  If set to true will set the withCredentials flag on the XMLHttpRequest (for CORS). Setting to undefined will omit it for default browser behavior
+        #
+        #   @return {Promise}   Call success
+        #
+        ###
         call: ( params = {} ) ->
             method  = ( params.method  or "GET" ).toUpperCase()
             type    = params.type    or "*"
@@ -286,6 +366,17 @@
             #
             @send( params.data )
 
+        ###*
+        #   Convenience method to add parameters to the url. Used for GET requests
+        #
+        #   @function appendURL
+        #
+        #   @params {String}    url         The request url
+        #   @params {Mixed}     parameters  The parameters that are to be appended
+        #
+        #   @return {String}    Request url with appended parameters
+        #
+        ###
         appendURL: ( url, parameters ) ->
             parameterString = ""
 
@@ -310,6 +401,14 @@
             #
             url + ( /\?/.test( url ) ? "&" : "?") + parameterString
 
+        ###*
+        #   Resolves the call promise with the correct success data based on the transport status
+        #
+        #   @function createSuccessResponse
+        #
+        #   @return {XHR}   Returns the native XHR instance
+        #
+        ###
         createSuccessResponse: () ->
             # Some XHR don't implement .response so fall-back to responseText
             #
@@ -335,6 +434,14 @@
                 statusText: @transport.statusText
             )
 
+        ###*
+        #   Reject the call promise with the correct error data based on the transport status
+        #
+        #   @function createErrorResponse
+        #
+        #   @return {XHR}   Returns the native XHR instance
+        #
+        ###
         createErrorResponse: ( xhrException ) ->
             @deferred.reject(
                 request:    @request
@@ -344,6 +451,14 @@
                 exception:  xhrException
             )
 
+        ###*
+        #   Rejects the call promise with the correct timeout data based on the transport status
+        #
+        #   @function createTimeoutResponse
+        #
+        #   @return {XHR}   Returns the native XHR instance
+        #
+        ###
         createTimeoutResponse: () ->
             @deferred.reject(
                 request:    @request
@@ -352,20 +467,69 @@
                 statusText: "Request Timeout"
             )
 
+        ###*
+        #   Resolves the call promise with the correct success data based on the transports status
+        #
+        #   @function overrideMimeType
+        #
+        #   @params {String}    mimeType    The mime-type that is to be set on the transport
+        #
+        #   @return None
+        #
+        ###
         overrideMimeType: ( mimeType ) ->
             @transport.overrideMimeType( mimeType ) if @transport
 
+        ###*
+        #   Sets a request header on the transport
+        #
+        #   @function setRequestHeader
+        #
+        #   @params {String}    name    The name of the header
+        #   @params {String}    value   The value of the header
+        #
+        #   @return None
+        #
+        ###
         setRequestHeader: ( name, value ) ->
             if @transport
                 @transport.setRequestHeader( name, value )
                 @request.headers[ name ] = value
 
+        ###*
+        #   Retrieves all response headers
+        #
+        #   @function getAllResponseHeaders
+        #
+        #   @return {String}    All the response headers
+        #
+        ###
         getAllResponseHeaders: () ->
             @transport.getAllResponseHeaders() if @transport
 
-        getResponseHeaders: ( name ) ->
-            @transport.getResponseHeaders( name ) if @transport
+        ###*
+        #   Retrieves a specific response header
+        #
+        #   @function getResponseHeaders
+        #
+        #   @params {String}    name    The name of the header
+        #
+        #   @return {String}    The value of the response header
+        #
+        ###
+        getResponseHeader: ( name ) ->
+            @transport.getResponseHeader( name ) if @transport
 
+        ###*
+        #   Sets the request timeout for the transport
+        #
+        #   @function setTimeout
+        #
+        #   @params {Number}    timeout     The request timeout in milliseconds
+        #
+        #   @return {String}    The value of the response header
+        #
+        ###
         setTimeout: ( timeout ) ->
             @timeout = parseInt( timeout, 10 )
 )
