@@ -271,11 +271,6 @@
 
             return @deferred.promise
 
-        # call convenience method (similar to but not the same as jQuery.ajax)
-        #
-        # We support the following parameters
-        #
-        #
         ###*
         #   Convenience method to perform an XHR call. Inspired by the jQuery.ajax()
         #   Combines the transport open() and send() into one call and helps
