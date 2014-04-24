@@ -3,7 +3,7 @@
   "description": "Platform agnostic XMLHttpRequest implementation",
   "main": "lib/node.js",
   "browser": "lib/browser.js",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "author": {
     "name": "Mark Doeswijk",
     "email": "mdoeswijk@gmail.com",
