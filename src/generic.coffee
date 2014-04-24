@@ -311,7 +311,7 @@
             if not params.cache
                 url = @appendURL( url, +( new Date() ) )
 
-            @open( method, params.url, async, params.username, params.password )
+            @open( method, url, async, params.username, params.password )
 
             # Set with credentials if requested
             #
@@ -375,9 +375,11 @@
             parameterString = ""
 
             switch typeof parameters
-                when "string", "number" then parameterString = parameters
+                when "string", "number"
+                    parameterString = parameters
 
-                when "boolean" then parameterString = parameters ? "true" : "false"
+                when "boolean"
+                    parameterString = if parameters then "true" else "false"
 
                 when "object"
                     parameterList = []
@@ -390,10 +392,14 @@
 
                     parameterString = parameterList.join( "&" )
 
-            # If a question mark is already present in the URL append as extra
-            # parameters with a & instead
+
+            # Don't append anything when an empty parameterString resulted.
+            # Otherwise, if a question mark (?) is already present in the URL then append as an extra
+            # parameter with an ampersand (&) instead.
             #
-            url + ( /\?/.test( url ) ? "&" : "?") + parameterString
+            url += ( if /\?/.test( url ) then "&" else "?" ) + parameterString if parameterString isnt ""
+
+            return url
 
         ###*
         #   Resolves the call promise with the correct success data based on the transport status
