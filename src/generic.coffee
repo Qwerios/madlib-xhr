@@ -130,11 +130,11 @@
         #
         #   @function open
         #
-        #   @params method      {String}    The request method (GET, POST, PUT or DELETE)
-        #   @params url         {String}    The request url
-        #   @params async       {Boolean}   Indicates if the request should be asynchronous or not. Default true
-        #   @params username    {String}    The http basic authentication username
-        #   @params password    {String}    The http basic authentication password
+        #   @params {String}    method      The request method (GET, POST, PUT or DELETE)
+        #   @params {String}    url         The request url
+        #   @params {Boolean}   async       Indicates if the request should be asynchronous or not. Default true
+        #   @params {String}    username    The http basic authentication username
+        #   @params {String}    password    The http basic authentication password
         #
         #   @return None
         #
@@ -193,7 +193,7 @@
         #
         #   @function open
         #
-        #   @params data    {Mixed}     The request content (body)
+        #   @params {Mixed}     data     The request content (body)
         #
         #   @return {Promise}   Call success
         #
