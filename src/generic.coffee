@@ -16,17 +16,15 @@
             require "madlib-console"
             require "q"
             require "madlib-object-utils"
-            require "madlib-promise-poll"
         )
     else if typeof define is "function" and define.amd
         define( [
             "madlib-console"
             "q"
             "madlib-object-utils"
-            "madlib-promise-poll"
         ], factory )
 
-)( ( console, Q, objectUtils, Poll ) ->
+)( ( console, Q, objectUtils ) ->
 
     ###*
     #   The W3 XMLHttpRequest implementation for madlib. It exposes the W3 interface
@@ -69,10 +67,6 @@
         #
         @timer
 
-        # Only used to fix a problem for Titanium error responses
-        #
-        @poll
-
         ###*
         #   The class constructor. You need to supply your instance of madlib-settings
         #
@@ -99,10 +93,6 @@
                 return new XMLHttpRequest()
 
             else if Ti? and Ti.Network?
-
-                # 10 tries with 200 milliseconds in between = 2 seconds total
-                #
-                @poll = new Poll( 10, 200 )
 
                 # The Titanium HTTP client functions the same as XMLHTTPRequest
                 # so we have very little to do here
@@ -179,37 +169,6 @@
 
                     else
                         @createErrorResponse()
-
-                else if 3 is @transport.readyState and Ti?
-                    # You are not allowed to access the status before readystate 4
-                    # but we have to for Titanium and it does work there
-                    #
-                    responseStatus = parseInt( @transport.status, 10 )
-
-                    response = @transport.response || @transport.responseText
-
-                    # Titanium appears to have a bug concerning error responses
-                    # and certain service back-ends
-                    #
-                    if responseStatus >= 400 and responseStatus < 600
-
-                        @poll.check( response )
-                        .then(
-
-                            () =>
-                                clearTimeout( @timer )
-                                @transport.abort()
-                                @createErrorResponse()
-
-                        ,   () =>
-                                console.warn( "[XHR] No error content received" )
-
-                                clearTimeout( @timer )
-                                @transport.abort()
-                                @createErrorResponse()
-                        )
-                        .done()
-
 
             @transport.open( method, url, async, username, password ) if @transport
 
