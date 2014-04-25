@@ -29,7 +29,6 @@
   "dependencies": {
     "xmlhttprequest": "~1.6.0",
     "madlib-console": "~0.1.0",
-    "madlib-promise-poll": "~0.1.0",
     "madlib-object-utils": "~0.1.0",
     "q": "~0.9.7"
   },
