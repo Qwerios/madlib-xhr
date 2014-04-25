@@ -267,7 +267,7 @@
 
             # Check if we need to add a cache buster parameter
             #
-            if not params.cache
+            if params.cache is false
                 url = @appendURL( url, +( new Date() ) )
 
             @open( method, url, async, params.username, params.password )
