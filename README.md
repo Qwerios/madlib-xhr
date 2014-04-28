@@ -1,5 +1,5 @@
 # madlib-xhr
-[![Build Status](https://travis-ci.org/Qwerios/madlib-xhr.svg?branch=master)](https://travis-ci.org/Qwerios/madlib-xhr)  [![NPM version](https://badge.fury.io/js/madlib-xhr.png)](http://badge.fury.io/js/grunt-jsdoc) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![Build Status](https://travis-ci.org/Qwerios/madlib-xhr.svg?branch=master)](https://travis-ci.org/Qwerios/madlib-xhr)  [![NPM version](https://badge.fury.io/js/madlib-xhr.png)](http://badge.fury.io/js/madlib-xhr) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 [![Npm Downloads](https://nodei.co/npm/madlib-xhr.png?downloads=true&stars=true)](https://nodei.co/npm/madlib-xhr.png?downloads=true&stars=true)
 
