@@ -255,6 +255,7 @@
             headers = params.headers or {}
             url     = params.url
             async   = false isnt params.async
+            data    = params.data
 
             throw new Error( "Missing request URL" ) if not url?
 
@@ -262,7 +263,7 @@
             # Remember that we need to do this before the @open call
             #
             if "GET" is method
-                url  = @appendURL( url, params.data )
+                url  = @appendURL( url, data )
                 data = undefined
 
             # Check if we need to add a cache buster parameter
@@ -317,7 +318,7 @@
 
             # This will return the promise to the caller
             #
-            @send( params.data )
+            @send( data )
 
         ###*
         #   Convenience method to add parameters to the url. Used for GET requests
