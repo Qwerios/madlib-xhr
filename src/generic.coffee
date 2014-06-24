@@ -372,10 +372,9 @@
         createSuccessResponse: () ->
             # Some XHR don't implement .response so fall-back to responseText
             #
-            response = @transport.response || @transport.responseText
+            response = @transport.response || @transport.responseText || @transport.statusText
 
             if @request.type is "json" and typeof response is "string"
-
                 # Try to parse the JSON response
                 # Can be empty for 204 no content response
                 #
@@ -385,7 +384,7 @@
 
                     catch jsonError
                         console.warn( "[XHR] Failed JSON parse, returning plain text", @request.url )
-                        response = @transport.responseText
+                        response = @transport.response || @transport.responseText || @transport.statusText
 
             @deferred.resolve(
                 request:    @request
@@ -403,9 +402,25 @@
         #
         ###
         createErrorResponse: ( xhrException ) ->
+            # Some XHR don't implement .response so fall-back to responseText
+            #
+            response = @transport.response || @transport.responseText || @transport.statusText
+
+            if @request.type is "json" and typeof response is "string"
+                # Try to parse the JSON response
+                # Can be empty for 204 no content response
+                #
+                if response
+                    try
+                        response = JSON.parse( response )
+
+                    catch jsonError
+                        console.warn( "[XHR] Failed JSON parse, returning plain text", @request.url )
+                        response = @transport.response || @transport.responseText || @transport.statusText
+
             @deferred.reject(
                 request:    @request
-                response:   @transport.responseText || @transport.statusText
+                response:   response
                 status:     @transport.status
                 statusText: @transport.statusText
                 exception:  xhrException
