@@ -200,7 +200,7 @@
         ###
         send: ( data ) ->
             @deferred     = Q.defer()
-            @request.data = data
+            @request.data = data or ""
 
             # Change new lines in the request body to match protocol specs
             #
