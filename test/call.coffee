@@ -8,7 +8,7 @@ describe( "XHR", () ->
             xhr = new XHR( settings )
 
             xhr.call(
-                url:      "http://labs.marviq.net/xdm/example.json"
+                url:      "http://www.qwerios.nl/projects/xdm/example.json"
                 method:   "GET"
                 type:     "json"
             )
