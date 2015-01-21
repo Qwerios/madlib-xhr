@@ -370,21 +370,23 @@
         #
         ###
         createSuccessResponse: () ->
-            # Some XHR don't implement .response so fall-back to responseText
+            # Some XHR don't implement .response and Titanium has even crashed on me for even touching it
+            # so falling back to responseText
             #
-            response = @transport.response || @transport.responseText || @transport.statusText
+            response = @transport.responseText
 
-            if @request.type is "json" and typeof response is "string"
+            # Can be empty for 204 no content response
+            #
+            if @request.type is "json" and typeof response is "string" and response
                 # Try to parse the JSON response
-                # Can be empty for 204 no content response
                 #
-                if response
-                    try
-                        response = JSON.parse( response )
+                try
+                    responseJSON = JSON.parse( response )
+                    response     = responseJSON
 
-                    catch jsonError
-                        console.warn( "[XHR] Failed JSON parse, returning plain text", @request.url )
-                        response = @transport.response || @transport.responseText || @transport.statusText
+                catch jsonError
+                    console.warn( "[XHR] Failed JSON parse, returning plain text: '#{response}'" )
+                    response = @transport.responseText
 
             @deferred.resolve(
                 request:    @request
@@ -402,21 +404,25 @@
         #
         ###
         createErrorResponse: ( xhrException ) ->
-            # Some XHR don't implement .response so fall-back to responseText
+            # Some XHR don't implement .response and Titanium has even crashed on me for even touching it
+            # so falling back to responseText
             #
-            response = @transport.response || @transport.responseText || @transport.statusText
+            response = @transport.responseText
 
-            if @request.type is "json" and typeof response is "string"
+            # Can be empty for 204 no content response
+            #
+            if @request.type is "json" and typeof response is "string" and response
                 # Try to parse the JSON response
-                # Can be empty for 204 no content response
                 #
-                if response
-                    try
-                        response = JSON.parse( response )
+                try
+                    responseJSON = JSON.parse( response )
+                    response     = responseJSON
 
-                    catch jsonError
-                        console.warn( "[XHR] Failed JSON parse, returning plain text", @request.url )
-                        response = @transport.response || @transport.responseText || @transport.statusText
+                catch jsonError
+                    # Error responses for json type calls often return string so we don't warn here
+                    #
+                    # console.warn( "[XHR] Failed JSON parse of error response, returning plain text: '#{response}'" )
+                    response = @transport.responseText
 
             @deferred.reject(
                 request:    @request
