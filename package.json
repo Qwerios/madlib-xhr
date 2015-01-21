@@ -19,18 +19,18 @@
   },
   "devDependencies": {
     "grunt-contrib-watch": "~0.6.1",
-    "grunt-contrib-coffee": "~0.11.1",
+    "grunt-contrib-coffee": "~0.12.0",
     "grunt": "~0.4.5",
     "coffee-script": "~1.8.0",
-    "chai": "~1.9.1",
-    "grunt-mocha-test": "~0.11.0",
+    "chai": "~1.10.0",
+    "grunt-mocha-test": "~0.12.7",
     "madlib-settings": "~0.1.7"
   },
   "dependencies": {
-    "xmlhttprequest": "~1.6.0",
+    "xmlhttprequest": "~1.7.0",
     "madlib-console": "~0.1.4",
     "madlib-object-utils": "~0.1.6",
-    "q": "~1.0.1"
+    "q": "~1.1.2"
   },
   "licenses": [
     {
