@@ -186,23 +186,9 @@
                     # This workaround code fixes the problem in the Titanium environment
                     #
                     if responseStatus >= 400 and responseStatus < 600
-
-                        @poll.check( response )
-                        .then(
-
-                            () =>
-                                clearTimeout( @timer )
-                                @transport.abort()
-                                @createErrorResponse()
-
-                        ,   () =>
-                                console.warn( "[XHR] No error content received" )
-
-                                clearTimeout( @timer )
-                                @transport.abort()
-                                @createErrorResponse()
-                        )
-                        .done()
+                        clearTimeout( @timer )
+                        @transport.abort()
+                        @createErrorResponse()
 
             @transport.open( method, url, async, username, password ) if @transport
 
