@@ -170,6 +170,40 @@
                     else
                         @createErrorResponse()
 
+                else if 3 is @transport.readyState and Ti?
+                    # You are not allowed to access the status before readystate 4
+                    # but we have to for Titanium and it does work there
+                    #
+                    responseStatus = parseInt( @transport.status, 10 )
+
+                    response = @transport.response || @transport.responseText
+
+                    # Titanium appears to have a bug concerning error responses
+                    # and certain service back-ends
+                    # ReadyState 4 is never reached for error responses leading
+                    # to our timeout timer to safe the day and at least get some
+                    # reply
+                    # This workaround code fixes the problem in the Titanium environment
+                    #
+                    if responseStatus >= 400 and responseStatus < 600
+
+                        @poll.check( response )
+                        .then(
+
+                            () =>
+                                clearTimeout( @timer )
+                                @transport.abort()
+                                @createErrorResponse()
+
+                        ,   () =>
+                                console.warn( "[XHR] No error content received" )
+
+                                clearTimeout( @timer )
+                                @transport.abort()
+                                @createErrorResponse()
+                        )
+                        .done()
+
             @transport.open( method, url, async, username, password ) if @transport
 
             # Set the timeout value
