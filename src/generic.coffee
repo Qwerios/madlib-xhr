@@ -275,16 +275,22 @@
             headers = params.headers or {}
             url     = params.url
             async   = false isnt params.async
-            data    = params.data
+
+            # Ensure an undefined value for `data` is normalized to `null`.
+            #
+            # Letting `data` be `undefined`, at least on DELETE requests, causes IE to generate a 'Content-length: 9' header (9==='undefined'.length) and no body content.
+            # On a keep-alive connection, this will break any request that follows.
+            #
+            data    = params.data ? null
 
             throw new Error( "Missing request URL" ) if not url?
 
             # Add the request data to the URL if needed
             # Remember that we need to do this before the @open call
             #
-            if "GET" is method
+            if data ? "GET" is method
                 url  = @appendURL( url, data )
-                data = undefined
+                data = null
 
             # Check if we need to add a cache buster parameter
             #
