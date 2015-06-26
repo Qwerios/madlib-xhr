@@ -288,7 +288,7 @@
             # Add the request data to the URL if needed
             # Remember that we need to do this before the @open call
             #
-            if data ? "GET" is method
+            if data? and "GET" is method
                 url  = @appendURL( url, data )
                 data = null
 
